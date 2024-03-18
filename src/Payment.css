@@ -1,0 +1,41 @@
+.payment{
+    background-color: white;
+
+}
+.payment_container > h1{
+    padding: 10px;
+    font-weight: 400;
+    background-color: rgb(234, 237, 237);
+    border-bottom: 1px solid lightgray;
+}
+
+.payment_container> h1 a{
+    text-decoration: none;
+     
+}
+.payment_section{
+    display: flex;
+    padding: 20px;
+    margin: 0 20px;
+    border-bottom: 1px solid lightgray;
+    text-align: left;
+}
+
+.payment_items{
+    font-size: 14px;
+    border-bottom: 1px solid lightgray;
+    padding-bottom: 5px; /* Reduce the padding */
+    margin-bottom: 5px;
+}
+
+.payment_address{
+    margin-left: 110px;
+}
+
+.payment_details{
+    flex: 0.8;
+    margin-left: 80px;
+    
+    
+    
+}
