@@ -1,36 +1,92 @@
-import React from 'react'
+import React, { useState , useEffect} from 'react'
 import "./Home.css";
 import Product from "./Product.js";
+import {AnimatePresence, motion} from "framer-motion"
 
-function Home() {
+const images=[
+  "https://amazon-clone-less-spend-smile-more.netlify.app/images/imgg1.jpg",
+  "https://amazon-clone-less-spend-smile-more.netlify.app/images/imgg3.jpg",
+  "https://amazon-clone-less-spend-smile-more.netlify.app/images/imgg4.jpg",
+  "https://amazon-clone-less-spend-smile-more.netlify.app/images/imgg2.jpg"
+]
+
+ function Home() {
+
+  const [index, setIndex] = useState(0)
+  const [direction, setdirection] = useState(0)
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setdirection(1);
+      setIndex(prevIndex => (prevIndex === images.length - 1 ? 0 : prevIndex + 1));
+    }, 4000); 
+
+    return () => clearInterval(intervalId);
+  }, []); 
+
+  function nextstep(){
+    setdirection(1)
+    if(index === images.length - 1){
+      setIndex(0)
+      return
+    }
+      setIndex(index +1)
+  }
+
+  function prevstep(){
+    setdirection(-1)
+    if(index === 0){
+      setIndex(images.length -1)
+      return
+    }
+      setIndex(index -1)
+  }
+
   return (
-    <div className='home'>
-    <div className='home_container'>
-        <img
-        className='home_image'
-        src="https://images-eu.ssl-images-amazon.com/images/G/02/digital/video/merch2016/Hero/Covid19/Generic/GWBleedingHero_ENG_COVIDUPDATE__XSite_1500x600_PV_en-GB._CB428684220_.jpg"
-        alt=''/>
+    <motion.div className='home'
+    initial={{ width: 0}}
+    animate={{ width: '100%'}}
+    exit={{ x: window.innerWidth, transition: { duration:0.1}}}
+    >
+     <div className='home_container'>
+        
+          <motion.img
+            initial={direction > 0 ? { opacity: 0, x: 200 } : { opacity: 0, x: -200 }}
+            animate={{ opacity: 1, x: 0 , transition: { duration: 0.6 }}}
+            exit={direction > 0 ? { opacity: 0, x: -200 } : { opacity: 0, x: 200 }}
+            src={images[index]}
+            alt=''
+            className='home_image'
+            key={images[index]}
+            custom={direction}
+          />
+
+
+        <button className='next' onClick={nextstep}>▶</button>
+        <button className='prev' onClick={prevstep}>◀</button>
+    
+        
         <div className='home_row'>
           <Product 
           id="12321341"
-          title="The Lean Startup: How Constant Innovation Creates Radically Successful Businesses Paperback"
-          price={800} 
-          image="https://images-na.ssl-images-amazon.com/images/I/51Zymoq7UnL._SX325_BO1,204,203,200_.jpg" 
+          title="TOPOSH 11.6 inch 2 in 1 Laptop Tablet Computer with Touch Screen, Intel Celeron Quad Core N4120 8GB RAM..."
+          price={50000} 
+          image="https://m.media-amazon.com/images/I/71DkiXprgBS._AC_UL320_.jpg" 
           rating={5}/>
           <Product
           id="49538094"
-          title="Kenwood kMix Stand Mixer for Baking, Stylish Kitchen Mixer with K-beater, Dough Hook and Whisk, 5 Litre Glass Bowl"
-          price={500}
-          image="https://images-na.ssl-images-amazon.com/images/I/81O%2BGNdkzKL._AC_SX450_.jpg"
+          title="SAMSUNG Galaxy Tab S7 11-inch Android Tablet 128GB Wi-Fi Bluetooth S Pen Fast Charging USB-C Port, Mystic Black.."
+          price={30000}
+          image="https://m.media-amazon.com/images/I/51fPuFND28L._AC_UL320_.jpg"
           rating={4}
           />
           </div>
         <div className='home_row'>
           <Product
           id="4903850"
-          title="Samsung LC49RG90SSUXEN 49' Curved LED Gaming Monitor"
-          price={1500}
-          image="https://images-na.ssl-images-amazon.com/images/I/71Swqqe7XAL._AC_SX466_.jpg"
+          title="Donerton Smart Watch, Fitness Tracker for Android Phones, Fitness Tracker with Heart Rate and Sleep Monitor, Activity Tracker..."
+          price={2000}
+          image="https://m.media-amazon.com/images/I/61QHRATj+vL._AC_UY218_.jpg"
           rating={3}
           />
           <Product
@@ -42,9 +98,9 @@ function Home() {
           />
           <Product
           id="3254354345"
-          title="New Apple iPad Pro (12.9-inch, Wi-Fi, 128GB) - Silver (4th Generation)"
-          price={30000}
-          image="https://images-na.ssl-images-amazon.com/images/I/816ctt5WV5L._AC_SX385_.jpg"
+          title="'PUMA Men's Enzo 2 Sneaker"
+          price={4500}
+          image="https://m.media-amazon.com/images/I/81+0gf6ZqzL._AC_UL320_.jpg"
           rating={4}
           />
           
@@ -52,15 +108,22 @@ function Home() {
         <div className='home_row'>
           <Product
           id="90829332"
-          title="Samsung LC49RG90SSUXEN 49' Curved LED Gaming Monitor - Super Ultra Wide Dual WQHD 5120 x 1440"
-          price={50000}
-          image="https://images-na.ssl-images-amazon.com/images/I/6125mFrzr6L._AC_SX355_.jpg"
+          title="HOTNIU Stretch Sofa Covers Printed Couch Cover Sofa Slipcovers for 3 Cushion Couches Elastic Universal Furniture..."
+          price={10000}
+          image="https://m.media-amazon.com/images/I/61gIsBN1vGL._AC_UL320_.jpg"
+          rating={4}
+          />
+          <Product
+          id="90829332"
+          title="SAMSUNG 55-Inch Class Neo QLED QN85A Series - 4K UHD Quantum HDR 24x Smart TV with Alexa Built-in..."
+          price={20000}
+          image="https://m.media-amazon.com/images/I/816z9yHvl4L._AC_UY218_.jpg"
           rating={4}
           />
           
         </div>
     </div>
-    </div>
+    </motion.div>
   )
 }
 

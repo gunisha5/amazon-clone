@@ -12,6 +12,7 @@
     object-fit:contain;
     margin: 0 20px;
     margin-top: 18px;
+    position: relative;
   }
   .header_search{
     display: flex;
@@ -25,15 +26,34 @@
     border: none;
     width: 100%;
   }
+  .search_icon{
+    
+      padding: 5px;
+      height: 22px !important;
+      background-color: #cd9042;
+    
+  }
+  .search_icon svg {
+    color: black; 
+    width: 24px; 
+    height: 24px;
+  }
   
   .header_optionLine1{
     font-size: 10px;
+    text-decoration: none;
   }
-  .header_optionLine2{
+  .header_option2{
     font-size: 13px;
+    text-decoration: none;
     font-weight: 800;
   }
   .header_optionBasket{
+    display: flex;
+    align-items: center;
+    color: white;
+  }
+  .shopping_cart{
     display: flex;
     align-items: center;
     color: white;
@@ -46,10 +66,25 @@
     display: flex;
     justify-content: space-evenly;
   }
-  .header_option{
+  .header_option {
     display: flex;
     flex-direction: column;
     margin-left: 10px;
     margin-right: 10px;
     color: white;
+    position: relative; 
   }
+  
+  .header_option  :hover::before  {
+    content: '';
+    position: absolute; 
+    top: -4px; 
+  left: -4px; 
+  right: -4px;
+  bottom: -4px;
+    border: 1px solid white; 
+    border-radius: 1; 
+    pointer-events: none; 
+  }
+  
+  

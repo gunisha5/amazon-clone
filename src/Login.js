@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './Login.css'
 import { Link, useNavigate } from "react-router-dom";
 import { auth } from "./firebase";
+import {motion} from 'framer-motion'
 
 function Login() {
     const navigate = useNavigate();
@@ -31,7 +32,11 @@ function Login() {
     }
 
     return (
-        <div className='login'>
+        <motion.div className='login'
+        initial={{ width: 0}}
+        animate={{ width: '100%'}}
+        exit={{ x: window.innerWidth, transition: { duration: 0.1}}}
+        >
             <Link to='/'>
                 <img
                     className="login_logo"
@@ -60,7 +65,7 @@ function Login() {
                 <button onClick={register} 
                 className='login_registerButton'>Create your Amazon Account</button>
             </div>
-        </div>
+        </motion.div>
     )
 }
 

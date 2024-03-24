@@ -9,10 +9,12 @@ import { getBasketTotal } from './reducer';
 import { useNavigate } from 'react-router-dom';
 import axios from './axios';
 import {db} from './firebase'
+import {motion} from 'framer-motion'
 
 function Payment() {
+    
     const navigate = useNavigate();
-    const [{paymentIntent, basket, user}, dispatch] = useStateValue();
+    const [{ basket, user}, dispatch] = useStateValue();
 
     const stripe = useStripe();
     const elements = useElements();
@@ -27,7 +29,7 @@ function Payment() {
         const getClientSecret = async () =>{
             const response =await axios({
                 method: 'post',
-                url: `/payments/create?total=${getBasketTotal(basket)}&currency=INR`
+                url: `/payments/create?total=${getBasketTotal(basket)*100}`
 
             })
             setClientSecret(response.data.clientSecret)
@@ -42,21 +44,40 @@ function Payment() {
         setProcessing(true);
     
         try {
-            const { paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
+            const { paymentIntent, error } = await stripe.confirmCardPayment(clientSecret, {
                 payment_method: {
-                    card: elements.getElement(CardElement)
+                    card: elements.getElement(CardElement),
+                    billing_details: {
+                        name: user.email,
+                        address: {
+                        line1: 'react lane123',
+                        postal_code: '98140',
+                        city: 'San fransico',
+                        state: 'CA',
+                        country:'US',
+                    }
+
+                }
                 }
             });
+    
+            if (error) {
+                // Handle Stripe error
+                console.error('Stripe payment error:', error.message);
+                setError(error.message);
+                setProcessing(false);
+                return;
+            }
     
             if (paymentIntent) {
                 await db.collection('users')
                     .doc(user?.uid)
                     .collection('orders')
-                    .doc(paymentIntent.id)
+                    .doc(paymentIntent?.id)
                     .set({
                         basket: basket,
-                        amount: paymentIntent.amount,
-                        created: paymentIntent.created
+                        amount: paymentIntent?.amount,
+                        created: paymentIntent?.created
                     });
     
                 setSucceeded(true);
@@ -69,16 +90,17 @@ function Payment() {
             } else {
                 // Handle undefined paymentIntent
                 console.error('paymentIntent is undefined');
+                setError('Payment failed');
+                setProcessing(false);
             }
         } catch (error) {
-            // Handle any errors from Stripe or Firestore
+            // Handle any other errors
             console.error('Error processing payment:', error.message);
             setError(error.message);
             setProcessing(false);
         }
     };
     
-
     const handleChange = event => {
 
         setDisabled(event.empty);
@@ -87,7 +109,12 @@ function Payment() {
     }
 
     return (
-        <div className='payment'>
+        <motion.div className='payment'
+        initial={{ width: 0}}
+        animate={{ width: '100%'}}
+        exit={{ x: window.innerWidth, transition: { duration: 0.1}}}
+        >
+
       <div className='payment_container'>
         <h1>
            Checkout (<Link to='./checkout'>{basket?.length} items</Link>)
@@ -152,7 +179,7 @@ function Payment() {
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   )
 }
 
